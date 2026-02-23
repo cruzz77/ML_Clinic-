@@ -191,7 +191,9 @@ The app will automatically install dependencies and deploy.
 ## 👨‍💻 Contributors
 
 - Aditya Chopra  
-- Team Members  
+- Soham Goel
+- Ankit Kumar
+- Nilesh Nand Nal
 
 ---
 
