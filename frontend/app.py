@@ -1,45 +1,59 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
+
+from utils.model_loader import load_model
+from components.upload_section import upload_csv
+from components.prediction_display import show_predictions
+from components.feature_importance import show_feature_importance
+
 
 st.set_page_config(page_title="ML Clinic", layout="wide")
 
 st.title("🏥 Clinical Appointment No-Show Prediction System")
-st.markdown("Milestone 1 Demo Version")
+st.markdown("Built with XGBoost | Production ML Pipeline")
 
-st.subheader("📂 Upload Patient Data (CSV)")
-uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
+# Load trained pipeline
+model = load_model()
 
-if uploaded_file is not None:
+# Upload section
+df = upload_csv()
 
-    df = pd.read_csv(uploaded_file)
-    st.subheader("Preview of Uploaded Data")
-    st.dataframe(df.head())
+if df is not None:
 
     try:
-        # Basic feature engineering (safe operations)
+        # -----------------------------
+        # Feature Engineering (MUST MATCH TRAINING)
+        # -----------------------------
+
         if "ScheduledDay" in df.columns:
             df["ScheduledDay"] = pd.to_datetime(df["ScheduledDay"]).dt.normalize()
 
         if "AppointmentDay" in df.columns:
             df["AppointmentDay"] = pd.to_datetime(df["AppointmentDay"]).dt.normalize()
 
-        if "AppointmentDay" in df.columns and "ScheduledDay" in df.columns:
-            df["lead_time"] = (df["AppointmentDay"] - df["ScheduledDay"]).dt.days
+        if "ScheduledDay" in df.columns and "AppointmentDay" in df.columns:
+            df["lead_time"] = (
+                df["AppointmentDay"] - df["ScheduledDay"]
+            ).dt.days
 
-        # 🔥 Dummy prediction (stable for deployment)
-        df["Predicted_No_Show"] = np.random.randint(0, 2, size=len(df))
-        df["No_Show_Probability"] = np.random.uniform(0.2, 0.8, size=len(df))
+        # 🔥 REQUIRED COLUMN
+        if "AppointmentDay" in df.columns:
+            df["appointment_day_of_week"] = (
+                df["AppointmentDay"].dt.day_name()
+            )
 
-        st.subheader("📊 Prediction Results")
-        st.dataframe(df.head())
+        if "Age" in df.columns:
+            df = df[df["Age"] >= 0]
 
-        st.metric(
-            label="Average No-Show Risk",
-            value=f"{df['No_Show_Probability'].mean():.2%}"
-        )
+        df = df.drop(columns=["PatientId", "AppointmentID"], errors="ignore")
 
-        st.success("Demo predictions generated successfully!")
+        # -----------------------------
+        # Prediction
+        # -----------------------------
+        show_predictions(model, df)
+
+        # Feature Importance
+        show_feature_importance(model)
 
     except Exception as e:
-        st.error(f"Error during processing: {e}")
+        st.error(f"Error during prediction: {e}")
