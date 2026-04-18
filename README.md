@@ -1,221 +1,84 @@
-# 🏥 ML Clinic  
-## Clinical Appointment No-Show Prediction System  
+# 🏥 ML Clinic: Agentic Care Coordination System
 
-A Machine Learning system that predicts whether a patient will miss a medical appointment based on historical appointment data.
+**AIML Course Project | End-to-End ML & Agentic AI**
 
-Built as part of an academic ML project with a production-style architecture and real-time inference using Streamlit.
-
----
-
-## 📌 Problem Statement
-
-Missed medical appointments (No-Shows) lead to:
-
-- Wasted clinical resources  
-- Increased operational costs  
-- Reduced healthcare efficiency  
-
-This project builds a predictive ML model to estimate the probability of a patient not showing up for an appointment.
+ML Clinic is a comprehensive healthcare intelligence system that evolves from baseline machine learning predictions to a fully autonomous **Agentic Care Coordination Assistant**. The system predicts patient no-show risks and generates validated, evidence-based intervention strategies using RAG and self-correcting AI workflows.
 
 ---
 
-## 🧠 Machine Learning Approach
+## 🚀 Milestone 2 - Agentic Care Coordination (Latest Update)
 
-### Dataset
-- Kaggle: No-Show Appointments Dataset  
-- Contains patient demographic and appointment information.
+The project has been scaled to an advanced **Agentic AI** platform found in the `noshow_project/` directory.
 
-### Feature Engineering
-- Lead Time (days between scheduling and appointment)
-- Appointment day of week
-- Age filtering
-- Removal of ID-based leakage columns
+### 🌟 Latest Agentic Features
+- **5-Node Agentic Workflow**: Orchestrated via **LangGraph** (`Ingestor` → `RAG` → `Reasoner` → `Builder` → `Critic`).
+- **Clinical Self-Correction**: A dedicated **Critic Node** audits AI recommendations against medical guidelines to ensure 100% evidence-based advice.
+- **Session-Based History**: Persistent history sidebar allowing clinical staff to switch between analyzed patients seamlessly.
+- **Operational Worklist**: Population-level batch analysis with prioritized CSV export for hospital outreach.
+- **Semantic RAG**: Real-time retrieval from a clinical knowledge base using **FAISS** and **Sentence-Transformers**.
+- **Official PDF Reports**: Generates professional care coordination summaries with clinical citations.
 
-### Model Pipeline
-
-The trained model is a Scikit-learn Pipeline consisting of:
-
-ColumnTransformer (Preprocessing)
-        ↓
-Classifier (XGBoost / Tree-based model)
-
-The full pipeline is serialized using `joblib` and deployed in Streamlit for real-time inference.
+### 🔗 Live URL (Agentic AI App)
+**Hosted App**: [https://ft5vbrt6kryvjzsynxzkf4.streamlit.app/](https://ft5vbrt6kryvjzsynxzkf4.streamlit.app/)
 
 ---
 
-## 🏗 Project Structure
+## 🏗 Project Architecture
 
 ```
-MLCLINIC/
+ML CLINIC /
 │
-├── backend/                # Model training & ML pipeline
-│   └── app/
+├── noshow_project/          # [Milestone 2] Agentic AI Platform (Latest)
+│   ├── agent/               # LangGraph state & node orchestration
+│   ├── rag/                 # FAISS vector database & retrievers
+│   ├── schemas/             # Pydantic structured output models
+│   ├── utils/               # LLM wrappers & robust preprocessing
+│   └── app.py               # Main Agentic UI
 │
-├── frontend/               # Streamlit inference app
-│   ├── artifacts/
-│   │   └── model.pkl       # Trained ML pipeline
-│   ├── components/
-│   │   ├── feature_importance.py
-│   │   ├── prediction_display.py
-│   │   └── upload_section.py
-│   ├── utils/
-│   │   └── model_loader.py
-│   ├── app.py
-│   └── requirements.txt
+├── frontend/                # [Milestone 1] Baseline ML App
+│   ├── artifacts/           # Trained pipeline (model.pkl)
+│   └── app.py               # Baseline ML UI
 │
-├── notebooks/
-│   └── ML_Clinic_Baseline.ipynb
-│
-├── runtime.txt
-└── README.md
+├── backend/                 # Model training logic
+└── data/                    # Kaggle No-Show dataset
 ```
 
 ---
 
-## ⚙️ Installation & Setup (Local)
+## ⚙️ Installation & Setup (Milestone 2)
 
-### 1️⃣ Clone the repository
-
+### 1. Navigate to the Agentic Project
 ```bash
-git clone https://github.com/<your-username>/ML_Clinic.git
-cd ML_Clinic/frontend
+cd noshow_project
 ```
 
----
-
-### 2️⃣ Create Virtual Environment (Python 3.12 Recommended)
-
-```bash
-python3.12 -m venv venv
-source venv/bin/activate   # Mac/Linux
+### 2. Set up Environment
+Create a `.env` file:
+```env
+GROQ_API_KEY=your_key_here
+HF_API_TOKEN=your_token_here
 ```
 
-Windows:
-```bash
-venv\Scripts\activate
-```
-
----
-
-### 3️⃣ Install Dependencies
-
+### 3. Install & Run
 ```bash
 pip install -r requirements.txt
-```
-
----
-
-### 4️⃣ Run Streamlit App
-
-```bash
 streamlit run app.py
 ```
-
-App will open at:
-
-```
-http://localhost:8501
-```
-
----
-
-## 🚀 Deployment (Streamlit Cloud)
-
-1. Push repository to GitHub  
-2. Go to Streamlit Cloud  
-3. Select repository  
-4. Set Main file path to: `frontend/app.py`  
-5. Ensure `runtime.txt` contains:
-
-```
-python-3.12
-```
-
-The app will automatically install dependencies and deploy.
-
----
-
-## 📊 How It Works
-
-1. User uploads CSV file  
-2. Feature engineering is applied  
-3. Trained pipeline (`model.pkl`) is loaded  
-4. Model performs:
-   - `predict()`
-   - `predict_proba()`  
-5. Results displayed:
-   - Prediction table  
-   - Average No-Show Risk  
-   - Feature Importance  
-
----
-
-## 📈 Example Output
-
-- Predicted_No_Show (0 or 1)
-- No_Show_Probability (0–1)
-- Average No-Show Risk %
-
----
-
-## 🎯 Model Performance
-
-- AUC: ~0.73  
-- Tree-based classifier with feature importance support  
-
----
-
-## 🔍 Key Features
-
-- End-to-end ML pipeline  
-- Modular architecture  
-- Real-time CSV upload inference  
-- Feature importance visualization  
-- Production-style model serialization  
-- Streamlit Cloud deployment ready  
-
----
-
-## 🧪 Tech Stack
-
-- Python 3.12  
-- Pandas  
-- NumPy  
-- Scikit-learn  
-- XGBoost  
-- Streamlit  
-- Joblib  
 
 ---
 
 ## 👨‍💻 Contributors
 
-- Aditya Chopra  
+- Aditya Chopra
 - Soham Goel
 - Ankit Kumar
 - Nilesh Nand Nal
 
 ---
 
-## 📌 Future Improvements
-
-- FastAPI backend integration  
-- Model monitoring  
-- Threshold optimization  
-- SHAP explainability  
-- Docker deployment  
-- CI/CD integration  
-
----
+## 🎯 Project Evolution
+- **Milestone 1**: Predictive modeling (XGBoost/Random Forest) with 73% AUC.
+- **Milestone 2**: Integration of LLMs, RAG, and Agentic logic for clinical decision support.
 
 ## 📄 License
-
 Academic project for educational purposes.
-
----
-
-## 🧠 Technical Note
-
-The deployed frontend directly loads a serialized Scikit-learn Pipeline (`model.pkl`) that contains both preprocessing and classifier logic.  
-
-All predictions are generated using real model inference. No dummy outputs are used in the deployed version.
